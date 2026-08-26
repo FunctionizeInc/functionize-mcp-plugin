@@ -1,0 +1,11 @@
+{
+  "name": "functionize-mcp",
+  "description": "Connects Claude to the hosted Functionize MCP server and bundles skills for driving it well: test authoring, session management, and agent-orchestration workflows.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Functionize"
+  },
+  "homepage": "https://github.com/FunctionizeTeam/functionize-mcp-plugin",
+  "repository": "https://github.com/FunctionizeTeam/functionize-mcp-plugin",
+  "license": "UNLICENSED"
+}

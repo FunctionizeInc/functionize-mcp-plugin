@@ -1,0 +1,13 @@
+{
+  "name": "functionize-mcp-plugin",
+  "owner": {
+    "name": "Functionize"
+  },
+  "plugins": [
+    {
+      "name": "functionize-mcp",
+      "source": "./",
+      "description": "Hosted Functionize MCP connection + skills for driving it well."
+    }
+  ]
+}

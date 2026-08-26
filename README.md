@@ -11,9 +11,8 @@ Installing this plugin gives you:
   session's real status, verifying a run actually passed, sequencing
   gotchas across the tools, and whatever else the team packages in here.
 
-The server itself lives in
-[`functionize-mcp-go`](https://github.com/FunctionizeTeam/functionize-mcp-go).
-This repo is the distribution package, not the server implementation.
+This repo is the distribution package; the server itself is implemented
+and operated separately by Functionize.
 
 ## Install
 
@@ -23,9 +22,7 @@ This repo is the distribution package, not the server implementation.
 ```
 
 Then sign in once via `/mcp` (Functionize account, browser OAuth, no
-copy/paste) — see
-[`functionize-mcp-go`'s connect doc](https://github.com/FunctionizeTeam/functionize-mcp-go/blob/main/docs/CONNECT-HOSTED-MCP.md)
-for the full walkthrough if anything's unclear.
+copy/paste).
 
 ## Contributing a skill
 

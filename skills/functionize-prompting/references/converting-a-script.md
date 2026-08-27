@@ -6,8 +6,7 @@ intent-driven flow** that *Decompose any flow* (SKILL.md) turns into the create-
 **pre-step** — lift the script to intent, then run the normal decompose on that intent.
 
 **Scope.** This is the *translation* craft only — script code → intent. It does **not** triage a suite,
-bucket tests, gate on missing context, or manage batches; that is bulk-migration work owned by the
-`functionize-playwright-migrate` / `functionize-selenium-migrate` skills. When you have one script (or a few)
+bucket tests, gate on missing context, or manage batches; that is bulk-migration work the `functionize-playwright-migrate` / `functionize-selenium-migrate` skills own when installed. When you have one script (or a few)
 pasted in a conversation, you convert it here and hand the intent to *Decompose any flow*.
 
 ## Read the assertions, not just the actions — or it isn't a test
@@ -90,8 +89,7 @@ Facts that live outside the action/assertion body and must still be lifted:
   long to generate atomically — **segment and chain via an orchestration** (#9), handing each record's id to
   the next (#30). **Never convert the members as independent tests** — that severs the dependency and each
   later test runs with no upstream state. If they are serialized only to dodge a shared-**data** clash but are
-  otherwise independent, convert each as its own **self-seeding** test. (The migrate skills recognize this as
-  `test-ordering`.)
+  otherwise independent, convert each as its own **self-seeding** test.
 - **Two actors, in sequence.** Two browser contexts (`browser.newContext()` twice) or a mid-test credential
   switch is **two users** — for a **sequential** hand-off (maker-checker, a role change), segment into one
   test per actor and chain them via an orchestration (#3 / #37); never a single context-switching flow. (Two

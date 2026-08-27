@@ -2,7 +2,7 @@
 name: functionize-prompting
 description: Write high-quality natural-language test instructions for the Functionize create agent. Activates whenever the user asks to write, draft, refine, fix, or review the prompt text that will be fed to the Functionize create agent — the instructions themselves, before generation — whether first-drafting a new test ("make/create/build a test") or changing what an existing test does (add a step, change a verification, adjust the flow — re-authoring its instructions): login flows, e-commerce, signup with 2FA, data-driven tests, API checks, database verifications, file uploads/downloads, visual validations, and converting an existing Selenium/Playwright-style or manual test into Functionize instructions. Making an already-created test run again — one that is failing, flaky, or needs diagnosing — is not this skill; that is functionize.
 metadata:
-  version: 2.39.0
+  version: 2.40.0
   fze-role: prompt-core
 ---
 
@@ -22,7 +22,7 @@ This skill covers requests like:
 
 If the user asks about Functionize **operations** (running tests, orchestrations, diagnostics, the agent session, the CLI), they need a different skill or to talk to the Functionize agent directly — this skill is purely about **writing the natural-language test instructions**.
 
-**If a Functionize domain or app-context skill for the target application is available, load it** via the Skill tool — a domain skill by its `functionize-<app>` name (e.g. **functionize-salesforce**, **functionize-sap-s4hana**), an app-context skill by its name. It is the source of the app's facts a prompt needs: an app-context skill carries those facts **only**, a domain skill carries them **and** restates the craft in the app's terms. This skill stays the canonical source of the domain-agnostic craft — either way, *Decompose any flow* (below) takes the companion's facts into the prompt.
+**If a Functionize domain or app-context skill for the target application is available, load it** via the Skill tool — a domain skill by its `functionize-<app>` name (e.g. **functionize-salesforce**), an app-context skill by its name. It is the source of the app's facts a prompt needs: an app-context skill carries those facts **only**, a domain skill carries them **and** restates the craft in the app's terms. This skill stays the canonical source of the domain-agnostic craft — either way, *Decompose any flow* (below) takes the companion's facts into the prompt.
 
 ## The single most important rule
 
@@ -193,7 +193,7 @@ When the user asks for any of these, push back and offer the correct alternative
 38. **Proving a rule or gate fired with only one variant** <!-- ap:two-variant-rule-conditional --> — a rule-conditional step (a validation rule, an assignment/escalation/routing rule) needs **two seeded variants**: condition true → the rule acts; condition false → it correctly does **not**. One passing case can't distinguish an enforced rule from one that never ran. Two variants is the minimum for a **binary** gate; a **multi-way** assignment/escalation/routing rule enumerates each branch (#36) — "the rule acts" can't tell which branch fired. When variants differ only in **data/condition** they are two rows of one data-driven test (not two hand-written sub-flows — #3); when they need **distinct actors** they are two orchestrated tests per #37 — not one. Complements #32 (invert the verify on the deny side) and #37 (outcome-vs-precondition).
 39. **Building one mega-test for a request that enumerated several independent flows** <!-- ap:split-enumerated-suite --> — when the request *lists* two or more behaviours that could each stand as its own test (nav, search, checkout), split it into one test per flow **before** drafting — see *Suite requests* above. The proactive twin of #3 (the interwoven multi-flow test, caught at request time by its enumerated shape). Distinct from #9 (segments one *too-long* journey and chains it — still one flow), #37 (segments across actors and orchestrates), and #36 (a set-covering check stays enumerated inside one test).
 
-**Permission-grant tests need a paired control (a routing note, not a single-test rule).** A permission-*grant* test needs a paired **deny** control so a pass proves the grant, not a universally-open action — a two-test / coverage concern, segmented and orchestrated per #37 (the `functionize` skill owns orchestration; `functionize-coverage` owns pairing coverage), not a single-prompt refuse.
+**Permission-grant tests need a paired control (a routing note, not a single-test rule).** A permission-*grant* test needs a paired **deny** control so a pass proves the grant, not a universally-open action — a two-test / coverage concern, segmented and orchestrated per #37 (the `functionize` skill owns orchestration), not a single-prompt refuse.
 
 ## Index — where to load deeper material
 

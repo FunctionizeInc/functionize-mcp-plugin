@@ -2,7 +2,7 @@
 name: functionize
 description: Operate and reference the Functionize Agentic Studio test platform and its conversational agent session. Activate whenever the user mentions Functionize, the Functionize agent session, the agent-session tools, Functionize variables and the values a test reads, a test's steps and action types, a test's verifications and assertions, orchestrations, TDM (test data management), smart waits, context switching, the self-healing slider, visual validation, or asks "how do I talk to the Functionize agent" / "how do I diagnose this test failure" — including an existing test that is failing, flaky, broken or newly red, and any ask to fix, repair, review or diagnose one. Activate even when they don't explicitly name the platform but the context is clearly Functionize-related. For writing, drafting or refining the test prompts themselves, use functionize-prompting, or the relevant functionize domain skill — this skill is the platform-operations layer.
 metadata:
-  version: 2.11.4
+  version: 2.12.0
   fze-role: ops
 ---
 
@@ -10,7 +10,7 @@ metadata:
 
 The Functionize Agentic Studio platform exposes a conversational **agent session** to the AI agent operating this skill through a set of MCP tools. The loop is three — `start_agent_session` (open one), `send_agent_message` (continue one), `get_agent_session_events` (read what it did); your integration also exposes tools to stream events, stop a session, list and fetch past sessions, attach a file, and list teams. Everything — creating tests, diagnosing failures, fixing tests, running orchestrations, building data-driven tests — is done by talking to that agent in natural language. Exact tool names and any prefix depend on how your client registers the integration (you may see them bare, e.g. `start_agent_session`, or namespaced); **each tool's own description is the source of truth for its arguments, lifecycle, and polling cadence** — consult it for call mechanics rather than this skill.
 
-**For writing the test prompts themselves, load the `functionize-prompting` skill; if a domain skill exists for the target application, prefer it when installed.** Domain skills follow the naming pattern `functionize-<app>` (e.g. `functionize-salesforce`, `functionize-sap-s4hana`). This skill does three jobs: it maps what the platform **can and cannot do**, it drives **platform operations** (sessions, running, diagnosis relay, orchestrations, reporting), and it **feeds** the prompting and domain skills — which own prompt craft and domain specifics. Load them by name via the Skill tool.
+**For writing the test prompts themselves, load the `functionize-prompting` skill; if a domain skill exists for the target application, prefer it when installed.** Domain skills follow the naming pattern `functionize-<app>` (e.g. `functionize-salesforce`). This skill does three jobs: it maps what the platform **can and cannot do**, it drives **platform operations** (sessions, running, diagnosis relay, orchestrations, reporting), and it **feeds** the prompting and domain skills — which own prompt craft and domain specifics. Load them by name via the Skill tool.
 
 ---
 

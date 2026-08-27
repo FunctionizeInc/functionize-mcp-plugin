@@ -469,12 +469,10 @@ If your test type isn't covered above, write a new one — describe the workflow
 
 ## Domain-specific extensions
 
-These templates are domain-agnostic. For some domains, dedicated sibling skills add **domain-shaped templates** (process catalogs, persona-role-gating, cross-module verification) on top of these primitives:
+These templates are domain-agnostic. When a domain skill for the app under test is installed, it typically adds **domain-shaped templates** — a process catalog for the app's end-to-end flows, a UI + role + document-type reference, and tenant-config placeholders for the app's roles and master data — on top of these primitives. With no domain skill loaded, elicit those specifics from the user (per the readiness check) and build from the primitives above.
 
-- **SAP S/4HANA Cloud testing** — see the **functionize-sap-s4hana** skill. Adds: process catalog for the 6 SAP E2E processes (O2C, S2P, R2R, D2O, L2C, R2R-HR); Fiori app + business role + document-type reference; cross-module FI verification template; tenant-config placeholders for SAP business roles and master data.
+Three patterns behind these domain-shaped templates generalize beyond any one app and are worth knowing:
 
-Three patterns from `functionize-sap-s4hana` generalize beyond SAP and are worth knowing:
-
-1. **Cross-module verification** — when one system action posts to another system (logistics → financial accounting, e-commerce → ERP, CRM → marketing automation, app → analytics), verify the downstream document was created with the expected linkage and content. The **functionize-sap-s4hana** skill's references/templates.md §5 (cross-module verification) shows the shape.
-2. **Persona-role-gating** — for authorization-aware apps, every test step is gated by a specific user role. Capturing which role drives which step in the `<!-- header -->` and at handoff points makes role-related test failures debuggable. See the **functionize-sap-s4hana** skill's references/tenant.md §4 (business roles assigned to test users).
-3. **9-step prompt-expansion method** — for complex domains, a checklist of "what does the skill need to decide" before writing the prompt (process, scope, prerequisites, persona path, apps, document chain, verifications, gotchas, format) keeps expansions repeatable. See the **functionize-sap-s4hana** skill's § 9-step method.
+1. **Cross-module verification** — when one system action posts to another system (logistics → financial accounting, e-commerce → ERP, CRM → marketing automation, app → analytics), verify the downstream document was created with the expected linkage and content.
+2. **Persona-role-gating** — for authorization-aware apps, every test step is gated by a specific user role. Capturing which role drives which step in the `<!-- header -->` and at handoff points makes role-related test failures debuggable.
+3. **9-step prompt-expansion method** — for complex domains, a checklist of "what does the skill need to decide" before writing the prompt (process, scope, prerequisites, persona path, apps, document chain, verifications, gotchas, format) keeps expansions repeatable.

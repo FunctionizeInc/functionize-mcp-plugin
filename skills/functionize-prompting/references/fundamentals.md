@@ -67,7 +67,7 @@ Verify line 1 net value equals unit price × 10, and capture the order net total
 - One instruction per line keeps each row a distinct, retry-able action and lets you verify rows independently.
 - **Verify the line count** (`shows 3 line items`) so a silently-dropped row fails the test instead of passing.
 - **Variable / data-driven counts** → drive the lines from a **TDM line-item table** (one datasource row per line; see `tdm.md`) and iterate, rather than hardcoding N instructions. Capture the resulting count and assert it.
-- This pattern is the backbone of SAP sales/purchase orders (`functionize-sap-s4hana` recipes) and Salesforce CPQ quote lines (`functionize-salesforce` business-processes) — both cross-link here.
+- This pattern is the backbone of enterprise order and quote-line flows, e.g. Salesforce CPQ quote lines.
 
 ### Blank lines
 
@@ -178,7 +178,7 @@ These are in almost every form, and each control type wants different phrasing. 
 | **Checkbox** | `Check the "I agree to the terms" box` · `Uncheck "Remember me"` · `Leave "Subscribe to newsletter" as-is` | State the desired **end state** with check/uncheck — idempotent, works regardless of the default. Don't blindly "click" a box whose initial state you don't control. To **not touch** a box, say **"leave it as-is"** (not "leave it unchecked", which is ambiguous — set vs. no-op vs. assert). To **assert** a box's state, use a separate verify step. |
 | **Multi-select** | `In the Tags multi-select, choose "Priority", "Billing", and "VIP"` | Name **each** value explicitly; don't write "select the tags." |
 
-When a value won't appear, suspect a **dependent/cascading** control (the parent field gates it) — set the controlling field first (Salesforce dependent picklists, `functionize-salesforce` how-to-prompt §4, are the canonical case).
+When a value won't appear, suspect a **dependent/cascading** control (the parent field gates it) — set the controlling field first (Salesforce dependent picklists are the canonical case).
 
 ### Submitting after typing — prefer Enter over a button
 

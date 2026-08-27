@@ -475,4 +475,4 @@ Three patterns behind these domain-shaped templates generalize beyond any one ap
 
 1. **Cross-module verification** — when one system action posts to another system (logistics → financial accounting, e-commerce → ERP, CRM → marketing automation, app → analytics), verify the downstream document was created with the expected linkage and content.
 2. **Persona-role-gating** — for authorization-aware apps, every test step is gated by a specific user role. Capturing which role drives which step in the `<!-- header -->` and at handoff points makes role-related test failures debuggable.
-3. **9-step prompt-expansion method** — for complex domains, a checklist of "what does the skill need to decide" before writing the prompt (process, scope, prerequisites, persona path, apps, document chain, verifications, gotchas, format) keeps expansions repeatable.
+3. **9-step prompt-expansion method** — for complex domains, a checklist of what has to be decided before writing the prompt (process, scope, prerequisites, persona path, apps, document chain, verifications, gotchas, format) keeps expansions repeatable.

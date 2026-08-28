@@ -1,5 +1,6 @@
 {
   "name": "functionize-mcp-plugin",
+  "description": "Connect Claude to Functionize's hosted MCP server for driving Agentic Studio test sessions.",
   "owner": {
     "name": "Functionize"
   },

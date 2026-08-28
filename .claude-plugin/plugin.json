@@ -4,7 +4,7 @@
   "author": {
     "name": "Functionize"
   },
-  "homepage": "https://github.com/FunctionizeTeam/functionize-mcp-plugin",
-  "repository": "https://github.com/FunctionizeTeam/functionize-mcp-plugin",
-  "license": "UNLICENSED"
+  "homepage": "https://github.com/FunctionizeInc/functionize-mcp-plugin",
+  "repository": "https://github.com/FunctionizeInc/functionize-mcp-plugin",
+  "license": "MIT"
 }

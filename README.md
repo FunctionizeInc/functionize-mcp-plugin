@@ -17,7 +17,7 @@ and operated separately by Functionize.
 ## Install
 
 ```
-/plugin marketplace add FunctionizeTeam/functionize-mcp-plugin
+/plugin marketplace add FunctionizeInc/functionize-mcp-plugin
 /plugin install functionize-mcp@functionize-mcp-plugin
 ```
 

@@ -24,11 +24,17 @@ and operated separately by Functionize.
 Then sign in once via `/mcp` (Functionize account, browser OAuth, no
 copy/paste).
 
-## Claude Desktop
+This works from the terminal CLI, and equally from the **Code** tab of the
+Claude Desktop app (v1.2581.0+): click **+** next to the prompt box, choose
+**Plugins → Add plugin**, and search the same marketplace. No terminal
+needed there, just the GUI plugin browser.
 
-This plugin's marketplace install is Claude Code only. Claude Desktop has no
-plugin system, so it connects to the same server directly, through a small
-local bridge (`mcp-remote`) that Desktop doesn't need for Claude Code.
+## Claude Desktop — Chat tab
+
+The Code tab above covers Desktop for anyone doing agent-orchestration work
+from a coding session. The **Chat** tab is a separate surface with its own
+connection system (Connectors, not plugins), so it needs a different setup:
+a small local bridge (`mcp-remote`) that talks to the same hosted server.
 
 **Prerequisite:** Node.js 18+ (`node --version`).
 

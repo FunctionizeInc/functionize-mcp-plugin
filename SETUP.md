@@ -187,12 +187,12 @@ claude mcp add --transport http functionize-team-12345 \
 **A server you add yourself takes over the plugin's entry at the same URL.** While any
 entry you added at that URL exists, the plugin's `functionize-hosted` drops out of
 `claude mcp list` and `/mcp`. The plugin stays installed and enabled, and its entry
-comes back once you remove every entry you added at that URL.
+comes back once you remove every entry you added at that URL
+(`claude mcp remove <name>`).
 
 **Entries you add do not displace each other**, so if you work across several teams, add
 one per team: same URL, a different name and a different header on each. They all stay
-in `claude mcp list`, you authenticate each one you add, and you pick which team you are
-acting as by picking the server.
+in `claude mcp list`, and you pick which team you are acting as by picking the server.
 
 In a Connectors dialog or a config file, add the same header alongside the URL. The
 server checks your membership on every request and refuses with a 403 if you are not
@@ -277,25 +277,25 @@ Quit the client first (**Cmd+Q** on the desktop app). The bridge rewrites its to
 on every refresh, so deleting it under a running client changes nothing and the file
 reappears.
 
-Those files are named after an MD5 of the server URL and none of them contains the URL
-itself, so there is nothing to grep for. For this server the prefix is
-`aaa4e984ce67f2c172f12b3c0c13bae7`:
+**Then find your prefix before deleting anything.** These files are named after an MD5 of
+the server URL, and none of them contains the URL itself, so there is nothing to grep
+for. If your bridge config has no `--header`, the prefix is
+`aaa4e984ce67f2c172f12b3c0c13bae7`. Derive it yourself with
+`printf '%s' 'https://mcp.functionize.com/mcp' | md5` on macOS, or `md5sum` on Linux.
+
+If your bridge does pass a `--header`, the prefix is computed from the URL **and** the
+headers, so it is not the one above and that command would match nothing. Two ways to
+find yours: if you have ever run the bridge with `--debug`,
+`grep -l functionize ~/.mcp-auth/mcp-remote-*/*_debug.log` names it outright, otherwise
+take the 32-character prefix from the most recently modified `*_tokens.json`. Never
+delete individual files by timestamp: one server's files do not share a modification
+time, so a time-sorted list interleaves two servers and you sign out of the wrong one.
+
+Then delete that whole prefix, substituting your own if it differs:
 
 ```sh
 rm ~/.mcp-auth/mcp-remote-*/aaa4e984ce67f2c172f12b3c0c13bae7_*
 ```
-
-To derive that yourself, run `printf '%s' 'https://mcp.functionize.com/mcp' | md5` on
-macOS, or `md5sum` on Linux.
-
-If your bridge passes a `--header`, the prefix is computed from the URL **and** the
-headers, so it will not be the one above and the command matches nothing. Find your
-prefix rather than guessing at files. If you have ever run the bridge with `--debug`,
-`grep -l functionize ~/.mcp-auth/mcp-remote-*/*_debug.log` names it outright. Otherwise
-take the 32-character prefix from the most recently modified `*_tokens.json` and delete
-that whole prefix. Never delete individual files by timestamp: one server's files do not
-share a modification time, so a time-sorted list interleaves two servers and you sign
-out of the wrong one.
 
 Then reopen the client. A browser tab opens to sign in again.
 

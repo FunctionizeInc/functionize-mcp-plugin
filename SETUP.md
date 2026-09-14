@@ -12,6 +12,9 @@ The server is `https://mcp.functionize.com/mcp`, run and operated by Functionize
 Every option below is written so an agent can execute it. If you already have an AI
 agent in front of you, paste this and let it do the work:
 
+> I am on <macOS / Windows / Linux>. State that first and use the paths for
+> that OS. Do not assume macOS.
+>
 > Connect me to the Functionize MCP server at `https://mcp.functionize.com/mcp`.
 > Read https://github.com/FunctionizeInc/functionize-mcp-plugin/blob/main/SETUP.md
 > and follow the section that matches the client you are running in. Run the steps
@@ -29,8 +32,10 @@ Then skip to [Check that it worked](#check-that-it-worked).
 
 ### Instructions for the agent
 
-If you are the agent following this document, four things will trip you up:
+If you are the agent following this document, five things will trip you up:
 
+- **Detect the OS first.** Do not assume macOS. Paths, the `npx` lookup, and how
+  you fully quit the desktop app all differ. Use the ones for this machine.
 - **Use absolute paths.** Claude Desktop launches commands without the user's shell,
   so an `npx` provided by nvm, fnm, or volta is a shell function it cannot see. Detect
   the real binary and write its full path.
@@ -98,6 +103,9 @@ plugins used by the Code tab.
 4. Leave both OAuth fields blank. Click **Add**.
 5. Click **Connect**. A browser tab opens. Sign in with your Functionize account.
 
+Prefer this dialog over editing a JSON file. A hand-edited config is how the
+file usually ends up invalid.
+
 **No "Add custom connector" button?** Your Claude organization has turned custom
 connectors off. That is an admin setting rather than anything about your machine, so
 see [If your organization blocks it](#if-your-organization-blocks-it).
@@ -114,9 +122,13 @@ reach a process running on your laptop. When the Connectors path above does not 
 the browser, the answer is [If your organization blocks
 it](#if-your-organization-blocks-it), or Claude Code.
 
-1. Open `~/Library/Application Support/Claude/claude_desktop_config.json`, creating it
-   if it is not there, and add this inside `mcpServers`, keeping anything already
-   present:
+1. Open the Claude Desktop config file and add the block below inside
+   `mcpServers`, keeping anything already present. Prefer **Settings →
+   Developer → Edit Config**, which creates the file if needed. The paths the
+   MCP project documents for that file are:
+
+   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
    ```json
    {
@@ -129,14 +141,17 @@ it](#if-your-organization-blocks-it), or Claude Code.
    }
    ```
 
-2. If the server does not appear later, replace `"npx"` with the absolute path that
-   `command -v npx` prints.
-3. Quit Claude completely with **Cmd+Q**. Closing the window is not enough. Reopen it.
+2. If the server does not appear later, replace `"npx"` with the absolute path
+   of the `npx` binary: `command -v npx` on macOS or Linux, `where npx` in
+   Command Prompt, or `(Get-Command npx).Source` in PowerShell.
+3. Completely quit Claude Desktop and reopen it. Closing the window is not
+   enough. On macOS that is **Cmd+Q**.
 4. A browser tab opens to sign in. Complete it.
 
 ## Gemini CLI
 
-Add this to `~/.gemini/settings.json`, or the project's `.gemini/settings.json`:
+Add this to `~/.gemini/settings.json` (your home directory; on Windows `~` is
+`%USERPROFILE%`), or the project's `.gemini/settings.json`:
 
 ```json
 {
@@ -250,7 +265,8 @@ which is what `claude plugin marketplace add` writes for itself:
 
 The key has to match the marketplace name. A newly created
 `strictKnownMarketplaces` also blocks the official Anthropic marketplace and turns off
-the `~/.claude/skills/` scan for everyone in the organization.
+the `~/.claude/skills/` scan for everyone in the organization (on Windows,
+`%USERPROFILE%\.claude\skills`).
 
 ## When it does not work
 
@@ -258,7 +274,8 @@ the `~/.claude/skills/` scan for everyone in the organization.
 |---|---|---|
 | Stuck on "Checking connection" | The client could not finish the sign-in handshake | Check the URL ends in `/mcp`, then remove the connector and add it again. If it persists on the desktop app, use the local bridge. On claude.ai in a browser there is no bridge, so use Claude Code instead or ask your Claude administrator |
 | Connected, but the agent has no Functionize tools | Sign-in did not complete | Click **Connect** again, and finish the browser tab rather than closing it |
-| Nothing happens after adding it | Older desktop builds need a full restart | Quit with **Cmd+Q** and reopen |
+| Nothing happens after adding it | Older desktop builds need a full restart | Completely quit Claude Desktop (on macOS, **Cmd+Q**) and reopen |
+| Agent used a Mac path, or asked you to edit `~/Library/...` on Windows | The agent assumed macOS | Say your OS up front and start again from [Fastest path](#fastest-path-hand-this-to-your-agent). Do not hand-edit a config file to "fix" a Mac path |
 | Server not listed, or "command not found" | The `command` in the config is not an executable | Use the absolute `npx` path, never a bare `"npx"` |
 | No browser tab opens | Worth watching the handshake directly | Run the bridge by hand: `npx -y mcp-remote@latest https://mcp.functionize.com/mcp` |
 | It worked before and now fails | An old entry points at a retired address | Remove any `functionize`-named entry whose URL is not `https://mcp.functionize.com/mcp`, leave every other server alone, then set it up again |
@@ -269,32 +286,44 @@ the `~/.claude/skills/` scan for everyone in the organization.
 
 ## Clearing cached tokens without breaking your other servers
 
-`mcp-remote` stores OAuth tokens under `~/.mcp-auth`, shared across every server it
-bridges. Removing the whole directory signs you out of all of them, which matters if
-any of your other bridged servers needs an admin approval to reconnect.
+`mcp-remote` stores OAuth tokens under `~/.mcp-auth` (on Windows, under
+`%USERPROFILE%\.mcp-auth`), shared across every server it bridges. Removing the
+whole directory signs you out of all of them, which matters if any of your other
+bridged servers needs an admin approval to reconnect.
 
-Quit the client first (**Cmd+Q** on the desktop app). The bridge rewrites its token file
-on every refresh, so deleting it under a running client changes nothing and the file
-reappears.
+Quit the client first (completely quit; on macOS, **Cmd+Q** on the desktop app).
+The bridge rewrites its token file on every refresh, so deleting it under a
+running client changes nothing and the file reappears.
 
 **Then find your prefix before deleting anything.** These files are named after an MD5 of
 the server URL, and none of them contains the URL itself, so there is nothing to grep
 for. If your bridge config has no `--header`, the prefix is
 `aaa4e984ce67f2c172f12b3c0c13bae7`. Derive it yourself with
-`printf '%s' 'https://mcp.functionize.com/mcp' | md5` on macOS, or `md5sum` on Linux.
+`printf '%s' 'https://mcp.functionize.com/mcp' | md5` on macOS, `md5sum` on
+Linux, or this anywhere Node is installed (the bridge already requires it):
+
+```sh
+node -e "console.log(require('crypto').createHash('md5').update('https://mcp.functionize.com/mcp').digest('hex'))"
+```
 
 If your bridge does pass a `--header`, the prefix is computed from the URL **and** the
 headers, so it is not the one above and that command would match nothing. Two ways to
 find yours: if you have ever run the bridge with `--debug`,
-`grep -l functionize ~/.mcp-auth/mcp-remote-*/*_debug.log` names it outright, otherwise
-take the 32-character prefix from the most recently modified `*_tokens.json`. Never
-delete individual files by timestamp: one server's files do not share a modification
-time, so a time-sorted list interleaves two servers and you sign out of the wrong one.
+`grep -l functionize ~/.mcp-auth/mcp-remote-*/*_debug.log` names it outright
+(on Windows, search `*_debug.log` files under `%USERPROFILE%\.mcp-auth` for
+`functionize`). Otherwise take the 32-character prefix from the most recently
+modified `*_tokens.json`. Never delete individual files by timestamp: one
+server's files do not share a modification time, so a time-sorted list
+interleaves two servers and you sign out of the wrong one.
 
 Then delete that whole prefix, substituting your own if it differs:
 
 ```sh
 rm ~/.mcp-auth/mcp-remote-*/aaa4e984ce67f2c172f12b3c0c13bae7_*
+```
+
+```powershell
+Remove-Item $HOME\.mcp-auth\mcp-remote-*\aaa4e984ce67f2c172f12b3c0c13bae7_*
 ```
 
 Then reopen the client. A browser tab opens to sign in again.

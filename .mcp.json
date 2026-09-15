@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "functionize-hosted": {
+    "functionize": {
       "type": "http",
       "url": "https://mcp.functionize.com/mcp",
       "oauth": { "clientId": "IUOyCwjMQ2MHoPfN99Rz0DldO2MUPZDt", "callbackPort": 8080 }

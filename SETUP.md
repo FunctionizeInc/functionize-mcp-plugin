@@ -84,10 +84,10 @@ search for the same marketplace.
 If you want only the connection, without the skills:
 
 ```sh
-claude mcp add --transport http functionize-hosted https://mcp.functionize.com/mcp
+claude mcp add --transport http functionize https://mcp.functionize.com/mcp
 ```
 
-Either way, run **`/mcp`**, pick `functionize-hosted`, and choose to authenticate.
+Either way, run **`/mcp`**, pick `functionize`, and choose to authenticate.
 Your browser opens, you sign in, and Claude Code captures the redirect itself on a
 local callback port. Nothing to copy or paste. You are prompted again automatically
 when the token expires.
@@ -133,7 +133,7 @@ it](#if-your-organization-blocks-it), or Claude Code.
    ```json
    {
      "mcpServers": {
-       "functionize-hosted": {
+       "functionize": {
          "command": "npx",
          "args": ["-y", "mcp-remote@latest", "https://mcp.functionize.com/mcp"]
        }
@@ -156,7 +156,7 @@ Add this to `~/.gemini/settings.json` (your home directory; on Windows `~` is
 ```json
 {
   "mcpServers": {
-    "functionize-hosted": {
+    "functionize": {
       "httpUrl": "https://mcp.functionize.com/mcp"
     }
   }
@@ -200,7 +200,7 @@ claude mcp add --transport http functionize-team-12345 \
 ```
 
 **A server you add yourself takes over the plugin's entry at the same URL.** While any
-entry you added at that URL exists, the plugin's `functionize-hosted` drops out of
+entry you added at that URL exists, the plugin's `functionize` drops out of
 `claude mcp list` and `/mcp`. The plugin stays installed and enabled, and its entry
 comes back once you remove every entry you added at that URL
 (`claude mcp remove <name>`).

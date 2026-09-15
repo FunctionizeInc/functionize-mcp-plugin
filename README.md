@@ -5,7 +5,7 @@ with skills for driving it well.
 
 Installing this plugin gives you:
 
-- The `functionize-hosted` MCP server connection (all 10 hosted tools: session
+- The `functionize` MCP server connection (all 10 hosted tools: session
   control, streaming, team listing, file attachments).
 - Skills that teach Claude how to use those tools correctly: reading a session's
   real status, verifying a run actually passed, sequencing gotchas across the
@@ -21,7 +21,7 @@ claude plugin marketplace add FunctionizeInc/functionize-mcp-plugin
 claude plugin install functionize-mcp@functionize-mcp-plugin
 ```
 
-Then run `/mcp`, pick `functionize-hosted`, and sign in once with your Functionize
+Then run `/mcp`, pick `functionize`, and sign in once with your Functionize
 account. Browser OAuth, no copy/paste.
 
 This works from the terminal CLI and from the **Code** tab of the Claude Desktop

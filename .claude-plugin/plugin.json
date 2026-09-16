@@ -1,6 +1,6 @@
 {
   "name": "functionize-mcp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Connects Claude to the hosted Functionize MCP server and bundles skills for driving it well: test authoring, session management, and agent-orchestration workflows.",
   "author": {
     "name": "Functionize"

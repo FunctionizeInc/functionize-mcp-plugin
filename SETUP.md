@@ -240,9 +240,8 @@ already present:
 ```
 
 **In `.vscode/mcp.json` the key is `servers`, not `mcpServers`.** VS Code flags
-`mcpServers` there as a schema error and starts nothing from it. A repo-root
-`.mcp.json`, which is the file Visual Studio uses, is the other way round and wants
-`mcpServers`, so do not copy one into the other. A workspace
+`mcpServers` there as a schema error and starts nothing from it, so a config copied
+from Claude Desktop or Cursor will not work here. A workspace
 `.vscode/mcp.json` is also meant to be committed and shared with your team, so use the
 user profile above unless you actually want everyone on the project to get this server.
 

@@ -32,11 +32,15 @@ box, choose **Plugins → Add plugin**, and search the same marketplace.
 
 Cursor and GitHub Copilot connect to the same server over HTTP, with no local install:
 
-[Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=functionize&config=eyJ1cmwiOiJodHRwczovL21jcC5mdW5jdGlvbml6ZS5jb20vbWNwIn0=)
+[Add to Cursor](https://cursor.com/link/mcp/install?name=functionize&config=eyJ1cmwiOiJodHRwczovL21jcC5mdW5jdGlvbml6ZS5jb20vbWNwIn0=)
 &middot;
 [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=functionize&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//mcp.functionize.com/mcp%22%7D)
 &middot;
-[Add to VS Code Insiders](vscode-insiders:mcp/install?%7B%22name%22%3A%22functionize%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//mcp.functionize.com/mcp%22%7D)
+[Add to VS Code Insiders](https://insiders.vscode.dev/redirect/mcp/install?name=functionize&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//mcp.functionize.com/mcp%22%7D&quality=insiders)
+
+<!-- Each config= payload is the server URL and nothing else. The Cursor one is base64
+     of {"url":"https://mcp.functionize.com/mcp"}. Decode before approving a change:
+     a payload with a "command" key installs a local process instead. -->
 
 Each still needs a browser sign-in afterwards, which only you can do. Visual Studio
 2022, the chat window of Claude Desktop (which uses Connectors rather than plugins),

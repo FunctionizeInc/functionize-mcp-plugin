@@ -132,7 +132,10 @@ it](#if-your-organization-blocks-it), or Claude Code.
 
    - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
    - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-   - Linux: `~/.config/Claude/claude_desktop_config.json`
+
+   Anthropic ships Claude Desktop for macOS and Windows only. Unofficial Linux
+   builds generally read `~/.config/Claude/claude_desktop_config.json`, but that
+   path is a community convention rather than a documented one.
 
    ```json
    {
@@ -173,10 +176,14 @@ Cursor speaks MCP over HTTP, so there is no `command` and nothing to install loc
 
 The one-click way, which opens Cursor and pre-fills the entry:
 
-[Add Functionize to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=functionize&config=eyJ1cmwiOiJodHRwczovL21jcC5mdW5jdGlvbml6ZS5jb20vbWNwIn0=)
+[Add Functionize to Cursor](https://cursor.com/link/mcp/install?name=functionize&config=eyJ1cmwiOiJodHRwczovL21jcC5mdW5jdGlvbml6ZS5jb20vbWNwIn0=)
 
-By hand, prefer **Settings → MCP → Add new MCP server** over editing the file. If you
-do edit it, the file is `~/.cursor/mcp.json` on macOS and Linux,
+<!-- The config= payload above is base64 of: {"url":"https://mcp.functionize.com/mcp"}
+     Decode it before approving any change to this link. A payload carrying a
+     "command" key would install a local process instead of an HTTP server. -->
+
+By hand, prefer the **Customize** page (MCP section) over editing the file. If you do
+edit it, the file is `~/.cursor/mcp.json` on macOS and Linux,
 `%USERPROFILE%\.cursor\mcp.json` on Windows, or `.cursor/mcp.json` in a project.
 Keep any servers already present:
 
@@ -193,7 +200,9 @@ Keep any servers already present:
 Then sign in: Cursor shows the server as needing authentication, and clicking through
 opens a browser tab. That step is yours, not your agent's.
 
-Both Cursor desktop and Cursor web, including Cloud Agents, are supported.
+**Cursor desktop is what these steps cover.** Cursor web and Cloud Agents sign in from
+Cursor's own servers rather than your machine, and that route is not enabled yet. Use
+Cursor desktop for now.
 
 ## GitHub Copilot in VS Code
 
@@ -204,12 +213,15 @@ The one-click way:
 
 [Add Functionize to VS Code](https://vscode.dev/redirect/mcp/install?name=functionize&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//mcp.functionize.com/mcp%22%7D)
 &middot;
-[Add to VS Code Insiders](vscode-insiders:mcp/install?%7B%22name%22%3A%22functionize%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//mcp.functionize.com/mcp%22%7D)
+[Add to VS Code Insiders](https://insiders.vscode.dev/redirect/mcp/install?name=functionize&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//mcp.functionize.com/mcp%22%7D&quality=insiders)
 
-By hand, use the Command Palette (the same keystroke on every OS) and run
-**MCP: Add Server**, choose **HTTP**, and give it
-`https://mcp.functionize.com/mcp`. To edit a workspace file directly, it is
-`.vscode/mcp.json`:
+By hand, open the Command Palette (Shift+Cmd+P on macOS, Ctrl+Shift+P on Windows and
+Linux, or F1 anywhere) and run **MCP: Add Server**, choose **HTTP**, give it
+`https://mcp.functionize.com/mcp`, and pick **Global** when it asks where to save.
+Global puts it in your user profile, which is what you want for a personal connection.
+
+To edit the file instead, run **MCP: Open User Configuration**. Keep any servers
+already present:
 
 ```json
 {
@@ -222,27 +234,28 @@ By hand, use the Command Palette (the same keystroke on every OS) and run
 }
 ```
 
-**The key is `servers`, not `mcpServers`.** VS Code uses a different schema from
-Claude Desktop and Cursor, and a config copied from one of those is accepted without
-complaint and then does nothing.
+**In `.vscode/mcp.json` the key is `servers`, not `mcpServers`.** VS Code marks
+`mcpServers` as not allowed in that file and loads nothing from it. A workspace
+`.vscode/mcp.json` is also meant to be committed and shared with your team, so use the
+user profile above unless you actually want everyone on the project to get this server.
 
 Then open Copilot Chat, switch it to **Agent** mode, and pick Functionize in the tools
-menu. Authentication runs from the **Auth** CodeLens on the entry in `mcp.json`, and
-it opens a browser tab for you to sign in.
+menu. A browser tab opens for sign-in on the first connection; you do not have to click
+anything to start it.
 
-**Browser-only VS Code is not supported.** Signing in from vscode.dev hands the
-authorization code to a redirect service that forwards it onward, so our server
-refuses that destination on purpose. Use desktop VS Code, which signs in on a loopback
-address and works. This is only about sign-in: the one-click install link above also
-goes through vscode.dev, and it is fine, because it carries the server URL and never
-touches your credentials.
+**Browser-only VS Code is not supported.** Signing in from vscode.dev would hand the
+authorization code to `vscode.dev/redirect`, which forwards it wherever its `url`
+parameter points, so our server refuses that destination on purpose. Desktop VS Code
+signs in on a loopback address and works. The install links above are a different path,
+`vscode.dev/redirect/mcp/install`, which only ever builds an install URI and never
+carries a code.
 
 ## GitHub Copilot in Visual Studio
 
 Needs **Visual Studio 2022 17.14 or later**, on Windows.
 
 The file is `%USERPROFILE%\.mcp.json` for every solution, or `.mcp.json` beside a
-solution for just that one. Same schema as VS Code:
+solution for just that one. Keep any servers already present:
 
 ```json
 {
@@ -255,11 +268,11 @@ solution for just that one. Same schema as VS Code:
 ```
 
 Then **View → GitHub Copilot Chat**, switch to **Agent**, and add the server from the
-tools menu. Visual Studio shows **Authentication Required** on the entry; clicking it
-opens the browser sign-in.
+tools menu. Visual Studio shows **Authentication Required** in the CodeLens on the
+entry; selecting it opens the browser sign-in.
 
-JetBrains IDEs with Copilot use the same URL. Follow JetBrains' own MCP over HTTP
-instructions for where their config lives.
+JetBrains IDEs with Copilot use the same server URL. Ask your user where their MCP
+config lives rather than fetching instructions from anywhere else.
 
 ## Any other MCP client
 
@@ -276,9 +289,12 @@ One check, the same for every client. Ask your agent:
 
 > list my Functionize teams
 
-A working connection names your teams and which one is the default. That is also the
-team the connection acts as, so this check tells you the connection is live and which
-team you are in, and it needs nothing set up beforehand.
+A working connection names your teams and marks your account default. It needs nothing
+set up beforehand, which is why it is the first check.
+
+If you pinned a team with `X-Functionize-Team-Id`, the answer reports that pinned team
+as well, and the pinned one is what the connection acts as. The account default stays
+marked as the default either way.
 
 If you would rather see activity, `list my Functionize agent sessions` also works.
 Sessions or "you have none yet" are both success, but that list covers the whole team,

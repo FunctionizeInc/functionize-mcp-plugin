@@ -30,9 +30,18 @@ box, choose **Plugins → Add plugin**, and search the same marketplace.
 
 ## Other clients
 
-The chat window of Claude Desktop uses Connectors rather than plugins, and Gemini
-CLI and custom clients each need their own setup. Every option, including what to
-do when your organization has connectors turned off, is in
+Cursor and GitHub Copilot connect to the same server over HTTP, with no local install:
+
+[Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=functionize&config=eyJ1cmwiOiJodHRwczovL21jcC5mdW5jdGlvbml6ZS5jb20vbWNwIn0=)
+&middot;
+[Add to VS Code](https://vscode.dev/redirect/mcp/install?name=functionize&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//mcp.functionize.com/mcp%22%7D)
+&middot;
+[Add to VS Code Insiders](vscode-insiders:mcp/install?%7B%22name%22%3A%22functionize%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//mcp.functionize.com/mcp%22%7D)
+
+Each still needs a browser sign-in afterwards, which only you can do. Visual Studio
+2022, the chat window of Claude Desktop (which uses Connectors rather than plugins),
+Gemini CLI and custom clients each need their own setup. Every option, including what
+to do when your organization has connectors turned off, is in
 **[SETUP.md](SETUP.md)**.
 
 That document is written so an AI agent can execute it, and its opening section

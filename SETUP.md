@@ -62,6 +62,9 @@ goes wrong. Choose by what is actually in front of you, not by what you installe
 | The Claude desktop app, working in its **Code** tab | [Claude Code](#claude-code) |
 | The Claude desktop app, chatting in a window | [Claude Desktop (chat)](#claude-desktop-chat) |
 | claude.ai in a browser | [Claude Desktop (chat)](#claude-desktop-chat), same settings |
+| Cursor, desktop or web | [Cursor](#cursor) |
+| VS Code, using GitHub Copilot Chat | [GitHub Copilot in VS Code](#github-copilot-in-vs-code) |
+| Visual Studio 2022, using GitHub Copilot Chat | [GitHub Copilot in Visual Studio](#github-copilot-in-visual-studio) |
 | A terminal where you type `gemini` | [Gemini CLI](#gemini-cli) |
 | Your own code, or another MCP client | [Any other MCP client](#any-other-mcp-client) |
 
@@ -129,6 +132,7 @@ it](#if-your-organization-blocks-it), or Claude Code.
 
    - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
    - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+   - Linux: `~/.config/Claude/claude_desktop_config.json`
 
    ```json
    {
@@ -163,6 +167,100 @@ Add this to `~/.gemini/settings.json` (your home directory; on Windows `~` is
 }
 ```
 
+## Cursor
+
+Cursor speaks MCP over HTTP, so there is no `command` and nothing to install locally.
+
+The one-click way, which opens Cursor and pre-fills the entry:
+
+[Add Functionize to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=functionize&config=eyJ1cmwiOiJodHRwczovL21jcC5mdW5jdGlvbml6ZS5jb20vbWNwIn0=)
+
+By hand, prefer **Settings → MCP → Add new MCP server** over editing the file. If you
+do edit it, the file is `~/.cursor/mcp.json` on macOS and Linux,
+`%USERPROFILE%\.cursor\mcp.json` on Windows, or `.cursor/mcp.json` in a project.
+Keep any servers already present:
+
+```json
+{
+  "mcpServers": {
+    "functionize": {
+      "url": "https://mcp.functionize.com/mcp"
+    }
+  }
+}
+```
+
+Then sign in: Cursor shows the server as needing authentication, and clicking through
+opens a browser tab. That step is yours, not your agent's.
+
+Both Cursor desktop and Cursor web, including Cloud Agents, are supported.
+
+## GitHub Copilot in VS Code
+
+Needs **VS Code 1.101 or later**, which is the first version that speaks remote MCP
+over HTTP with OAuth.
+
+The one-click way:
+
+[Add Functionize to VS Code](https://vscode.dev/redirect/mcp/install?name=functionize&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//mcp.functionize.com/mcp%22%7D)
+&middot;
+[Add to VS Code Insiders](vscode-insiders:mcp/install?%7B%22name%22%3A%22functionize%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//mcp.functionize.com/mcp%22%7D)
+
+By hand, use the Command Palette (the same keystroke on every OS) and run
+**MCP: Add Server**, choose **HTTP**, and give it
+`https://mcp.functionize.com/mcp`. To edit a workspace file directly, it is
+`.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "functionize": {
+      "type": "http",
+      "url": "https://mcp.functionize.com/mcp"
+    }
+  }
+}
+```
+
+**The key is `servers`, not `mcpServers`.** VS Code uses a different schema from
+Claude Desktop and Cursor, and a config copied from one of those is accepted without
+complaint and then does nothing.
+
+Then open Copilot Chat, switch it to **Agent** mode, and pick Functionize in the tools
+menu. Authentication runs from the **Auth** CodeLens on the entry in `mcp.json`, and
+it opens a browser tab for you to sign in.
+
+**Browser-only VS Code is not supported.** Signing in from vscode.dev hands the
+authorization code to a redirect service that forwards it onward, so our server
+refuses that destination on purpose. Use desktop VS Code, which signs in on a loopback
+address and works. This is only about sign-in: the one-click install link above also
+goes through vscode.dev, and it is fine, because it carries the server URL and never
+touches your credentials.
+
+## GitHub Copilot in Visual Studio
+
+Needs **Visual Studio 2022 17.14 or later**, on Windows.
+
+The file is `%USERPROFILE%\.mcp.json` for every solution, or `.mcp.json` beside a
+solution for just that one. Same schema as VS Code:
+
+```json
+{
+  "servers": {
+    "functionize": {
+      "url": "https://mcp.functionize.com/mcp"
+    }
+  }
+}
+```
+
+Then **View → GitHub Copilot Chat**, switch to **Agent**, and add the server from the
+tools menu. Visual Studio shows **Authentication Required** on the entry; clicking it
+opens the browser sign-in.
+
+JetBrains IDEs with Copilot use the same URL. Follow JetBrains' own MCP over HTTP
+instructions for where their config lives.
+
 ## Any other MCP client
 
 The server is a standard Streamable HTTP MCP endpoint with OAuth 2.1, so any MCP
@@ -176,11 +274,15 @@ native client can capture the authorization code itself.
 
 One check, the same for every client. Ask your agent:
 
-> list my Functionize agent sessions
+> list my Functionize teams
 
-A working connection answers with sessions, or says you have none yet. Both are
-success. The list covers your whole team, so you may see sessions your colleagues
-started.
+A working connection names your teams and which one is the default. That is also the
+team the connection acts as, so this check tells you the connection is live and which
+team you are in, and it needs nothing set up beforehand.
+
+If you would rather see activity, `list my Functionize agent sessions` also works.
+Sessions or "you have none yet" are both success, but that list covers the whole team,
+so you may see sessions your colleagues started.
 
 If the agent says it has no tool for that, the connection is not live. See
 [When it does not work](#when-it-does-not-work).
@@ -338,6 +440,10 @@ Ten tools, once connected:
 | Watch it work | `get_agent_session`, `get_agent_session_events`, `stream_agent_session_events`, `list_agent_sessions` |
 | Give it context | `upload_session_file`, `delete_session_file` |
 | Scope and stop | `list_agent_teams`, `stop_agent_session` |
+
+The plugin's skills, which teach an agent how to use these tools well, install only in
+Claude Code. Every other client gets the same ten tools and the guidance the server
+sends with them, which is the part that matters most; the skills are an extra on top.
 
 Attachments cap at 5 MiB per file and 5 files per attachment context. Text files pass
 through as-is. Binary files, images, PDFs and office documents must be base64-encoded

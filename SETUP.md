@@ -179,6 +179,9 @@ Add this to `~/.gemini/settings.json` (your home directory; on Windows `~` is
 
 Cursor speaks MCP over HTTP, so there is no `command` and nothing to install locally.
 
+**The next two steps are Cursor desktop.** On Cursor web or Cloud Agents, skip to
+[Cursor web and Cloud Agents](#cursor-web-and-cloud-agents) below.
+
 The one-click way, which opens Cursor and pre-fills the entry:
 
 [Add Functionize to Cursor](https://cursor.com/link/mcp/install?name=functionize&config=eyJ1cmwiOiJodHRwczovL21jcC5mdW5jdGlvbml6ZS5jb20vbWNwIn0=)
@@ -205,9 +208,25 @@ Keep any servers already present:
 Then sign in: Cursor shows the server as needing authentication, and clicking through
 opens a browser tab. That step is yours, not your agent's.
 
-**Cursor desktop is what these steps cover.** Cursor web and Cloud Agents sign in from
-Cursor's own servers rather than your machine, and that route is not enabled yet. Use
-Cursor desktop for now.
+### Cursor web and Cloud Agents
+
+The deeplink and `~/.cursor/mcp.json` above both act on your own machine, so neither
+applies here. Add Functionize as an HTTP server pointing at
+`https://mcp.functionize.com/mcp`, from the **MCP** dropdown at
+[cursor.com/agents](https://cursor.com/agents). Cursor signs in with OAuth, per person.
+If a cloud agent runs before that sign-in, Cursor skips the Functionize tools, lets the
+run finish without them, and records `mcp_auth_error` on the run dashboard.
+
+A team admin can add it for Cloud Agents under
+[**Dashboard → Plugins & MCPs**](https://cursor.com/dashboard/plugins). That alone does
+not put it in anyone's Agent Window, which needs **Add to Team Marketplace** and then a
+per-person install from **Customize**. Cursor's own MCP docs carry that flow. Sign-in
+stays per person with your own Functionize account either way.
+
+**Not confirmed end to end yet.** Our sign-in accepts the hosted callback Cursor
+documents for both surfaces, but nobody has yet driven a full web sign-in through it. If
+yours stops on a page saying `redirect_uri not permitted`, that is this gap and not
+anything you did. Tell us and we will fix it.
 
 ## GitHub Copilot in VS Code
 
@@ -286,7 +305,8 @@ browser sign-in.
 recognise, and nobody has yet observed which one Visual Studio sends. If sign-in stops
 on a page saying `redirect_uri not permitted`, that is this gap and not anything you
 did. Tell us and we will add it. Cursor desktop, VS Code desktop, Claude Code and
-Claude Desktop are all confirmed working.
+Claude Desktop are all confirmed working. Cursor web and Cloud Agents are enabled but
+not yet confirmed by an observed sign-in.
 
 JetBrains IDEs with Copilot use the same server URL, with the same caveat: we have not
 seen what their plugin sends as a redirect address. Ask your user where their MCP
@@ -418,13 +438,13 @@ the `~/.claude/skills/` scan for everyone in the organization (on Windows,
 | Agent used a Mac path, or asked you to edit `~/Library/...` on Windows | The agent assumed macOS | Say your OS up front and start again from [Fastest path](#fastest-path-hand-this-to-your-agent). Do not hand-edit a config file to "fix" a Mac path |
 | Server not listed, or "command not found" | The `command` in the config is not an executable | Use the absolute `npx` path, never a bare `"npx"` |
 | No browser tab opens, Claude Desktop | Worth watching the handshake directly | Run the bridge by hand: `npx -y mcp-remote@latest https://mcp.functionize.com/mcp`. The bridge is for the Claude desktop app only; it cannot help Cursor, VS Code or Visual Studio |
-| `redirect_uri not permitted`, a bare 400 page | Your client signs in from an address our server does not recognise yet | Not something you can fix in config. Tell us which client and version you are on. Cursor desktop, VS Code desktop, Claude Code and Claude Desktop are confirmed working |
+| `redirect_uri not permitted`, a bare 400 page | Your client signs in from an address our server does not recognise yet | Not something you can fix in config. Tell us which client and version you are on. Cursor desktop, VS Code desktop, Claude Code and Claude Desktop are confirmed working; Cursor web and Cloud Agents are enabled but unconfirmed |
 | VS Code offers to "try a different way (URL Handler)" | The loopback sign-in failed and it is falling back through vscode.dev, which we refuse | Decline it and fix the first attempt: free the loopback port, or close and retry the sign-in tab |
 | Cursor or VS Code shows the server but no tools | The tools are not enabled for the chat, or sign-in did not finish | In Cursor, check the server is authenticated. In VS Code, switch Copilot Chat to **Agent** mode and enable Functionize in the tools picker. In Visual Studio the tools are off by default |
 | It worked before and now fails | An old entry points at a retired address | Remove any `functionize`-named entry whose URL is not `https://mcp.functionize.com/mcp`, leave every other server alone, then set it up again |
 | Need to re-login, local bridge only | `mcp-remote` caches tokens on disk under `~/.mcp-auth` | See [clearing cached tokens](#clearing-cached-tokens-without-breaking-your-other-servers) below. Removing that whole directory signs you out of every `mcp-remote` server |
 | Need to re-login, Claude Code | Claude Code keeps its own OAuth state, not in `~/.mcp-auth` | Run `/mcp`, pick the server, and authenticate again. Do not delete anything |
-| Sign-in never completes on a remote machine | The browser and the client have to be on the same machine for the redirect to land | SSH sessions and remote dev boxes have no supported path today. Set the connection up on your local machine |
+| Sign-in never completes on a remote machine | Most clients here capture the redirect on the machine they run on, so the browser and the client have to be on the same machine | SSH sessions and remote dev boxes have no supported path for those. Set the connection up on your local machine, or use a surface that signs in against a hosted callback: claude.ai in a browser, Cursor web, or Cloud Agents |
 | Tools appear but every call is refused | Your account may not be provisioned | Tell us the email address you signed in with |
 
 ## Clearing cached tokens without breaking your other servers
